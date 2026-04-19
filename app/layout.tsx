@@ -23,8 +23,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Maryam Abdullahi Ibrahim | Virtual Assistant & Operations Coordinator",
-  description: "Professional Virtual Assistant and Operations Coordinator based in Kano, Nigeria. Specializing in client onboarding, email management, scheduling, and operational systems.",
+  title: "Maryam Ibrahim | Client Support & Operations Specialist",
+  description: "Client Support & Operations Specialist helping businesses and entrepreneurs run smoothly by managing client relations, administrative workflows, and operational systems.",
 };
 
 export default function RootLayout({

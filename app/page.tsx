@@ -31,65 +31,65 @@ import {
   Sun,
   Moon,
   ArrowUp,
-  MessageSquare
+  MessageSquare,
+  Layout
 } from "lucide-react";
+
+import { motion, useAnimationControls } from "framer-motion";
 
 const navLinks = [
   { name: "About", href: "#about" },
   { name: "Services", href: "#services" },
   { name: "Work", href: "#work" },
+  { name: "Why MaryamX", href: "#why-hire" },
   { name: "Tools", href: "#tools" },
   { name: "Contact", href: "#contact" },
 ];
 
 const services = [
   {
-    icon: Handshake,
-    title: "Client Onboarding",
-    description: "7-step structured process ensuring seamless welcome, tracker entry, and consistent follow-up for every new client.",
+    icon: MessageSquare,
+    title: "Client Support & Communication",
+    description: "Managing 40-60 daily interactions across WhatsApp, email, and platforms with 99% accuracy.",
   },
   {
-    icon: Mail,
-    title: "Inbox & Email Management",
-    description: "Priority triage, response templates, and complaint handling to keep communications organized and professional.",
+    icon: Sparkles,
+    title: "Administrative & Virtual Assistance",
+    description: "Calendar management, data entry, and operational support for remote teams.",
+  },
+  {
+    icon: Handshake,
+    title: "Operations Coordination",
+    description: "Scheduling 5+ daily sessions, maintaining 700+ records, and streamlining workflows.",
   },
   {
     icon: Calendar,
-    title: "Scheduling & Coordination",
-    description: "Calendar management, session reminders, and trainer coordination to ensure no appointment is missed.",
+    title: "Scheduling & Calendar Management",
+    description: "Coordinating complex schedules for instructors, clients, and training sessions.",
   },
   {
     icon: BarChart3,
-    title: "Client Tracking Systems",
-    description: "Google Sheets dashboards with daily updates, status tracking, and real-time client information at your fingertips.",
-  },
-  {
-    icon: FileText,
-    title: "Operational Reporting",
-    description: "Weekly comprehensive reports with metrics, challenges, and actionable recommendations for continuous improvement.",
-  },
-  {
-    icon: MessageCircle,
-    title: "Community Management",
-    description: "WhatsApp and Telegram admin, group rules, moderation, and fostering engagement across platforms.",
+    title: "Data Tracking & Reporting",
+    description: "Weekly performance reports, client engagement tracking, and process improvement.",
   },
 ];
 
 const tools = [
-  { name: "Google Sheets", category: "Client Tracking", icon: BarChart3 },
-  { name: "Google Calendar", category: "Scheduling", icon: Calendar },
-  { name: "Gmail / Outlook", category: "Email Management", icon: Mail },
-  { name: "WhatsApp", category: "Client Communication", icon: MessageCircle },
-  { name: "Telegram", category: "Community", icon: MessageCircle },
-  { name: "Microsoft Excel", category: "Reporting", icon: FileText },
-  { name: "Zoom / Meet", category: "Virtual Sessions", icon: Zap },
-  { name: "SOP Docs", category: "Process Writing", icon: FileText },
+  { name: "Google Workspace", category: "Gmail, Calendar, Drive, Docs, Sheets", icon: BarChart3 },
+  { name: "Microsoft Office Suite", category: "Excel, Word, PowerPoint", icon: FileText },
+  { name: "CRM Systems", category: "Client Relationship Management", icon: Handshake },
+  { name: "Communication Tools", category: "Zoom, WhatsApp Business", icon: MessageCircle },
+  { name: "Remote Collaboration", category: "Team Coordination", icon: Zap },
+  { name: "Notion", category: "Knowledge Base", icon: FileText },
+  { name: "Slack", category: "Team Chat", icon: MessageSquare },
+  { name: "Trello", category: "Project Management", icon: Layout },
 ];
 
 const workItems = [
   {
     title: "Weekly Operations Report",
     description: "Comprehensive metrics tracking 28 clients, 10 new onboardings, 18 follow-ups, and 12 sessions scheduled within a single week at XM Trading Academy.",
+    demonstrates: ["Organization and data management", "Operational efficiency", "Attention to detail"],
     image: "/images/Screenshot 2026-04-03 164728.png",
     stats: [
       { value: 28, label: "Clients Managed", icon: Users },
@@ -101,27 +101,30 @@ const workItems = [
   {
     title: "Email Management System",
     description: "Structured inbox triage and response system with categorized templates for inquiries, follow-ups, reminders, and complaint resolution.",
+    demonstrates: ["Clear and professional communication", "Inbox organization", "Client relationship tracking"],
     image: "/images/Screenshot 2026-04-03 165131.png",
     tags: ["Inbox Triage", "Templates", "Priority Sorting"],
   },
   {
     title: "Client Onboarding SOP",
     description: "7-step documented process from initial contact to fully onboarded client, including welcome messages and tracker setup.",
+    demonstrates: ["System building", "Process documentation", "Seamless client experience"],
     image: "/images/Screenshot 2026-04-03 164558.png",
     tags: ["7-Step Process", "Welcome Flow", "Documentation"],
   },
   {
     title: "Client Tracking Dashboard",
     description: "Real-time Google Sheets dashboard with daily updates, status tracking, and client information management.",
+    demonstrates: ["Data management", "Real-time reporting", "Attention to detail"],
     image: "/images/Screenshot 2026-03-29 191541.png",
     tags: ["Google Sheets", "Live Dashboard", "Status Tracking"],
   },
 ];
 
 const contactMethods = [
-  { icon: Mail, label: "Email", value: "maryam.operations@gmail.com", href: "mailto:maryam.operations@gmail.com" },
-  { icon: MessageCircle, label: "WhatsApp", value: "+234 803 988 8339", href: "https://wa.me/2348039888339" },
-  { icon: Zap, label: "Telegram", value: "@maryam_va", href: "https://t.me/maryam_va" },
+  { icon: Mail, label: "Email", value: "meeharabdullahi2026@gmai.com", href: "mailto:meeharabdullahi2026@gmai.com" },
+  { icon: Handshake, label: "LinkedIn", value: "maryam-abdullahi-ibrahim", href: "https://linkedin.com/in/maryam-abdullahi-ibrahim" },
+  { icon: Zap, label: "Telegram", value: "@maryam_supportpro", href: "https://t.me/maryam_supportpro" },
   { icon: MapPin, label: "Location", value: "Kano, Nigeria", href: "#" },
 ];
 
@@ -131,6 +134,57 @@ const stats = [
   { value: 18, label: "Follow-ups", icon: Clock },
   { value: 12, label: "Sessions", icon: Calendar },
 ];
+
+function InfiniteMarquee({ items, theme }: { items: typeof tools, theme: 'light' | 'dark' }) {
+  const [isPaused, setIsPaused] = useState(false);
+  
+  // Double the items for seamless looping
+  const duplicatedItems = [...items, ...items, ...items];
+
+  return (
+    <div className="relative overflow-hidden w-full py-10">
+      {/* Fade Edges */}
+      <div className={`absolute inset-y-0 left-0 w-32 z-10 pointer-events-none ${theme === 'dark' ? 'bg-gradient-to-r from-[#0f0f12] to-transparent' : 'bg-gradient-to-r from-[#fafaf9] to-transparent'}`} />
+      <div className={`absolute inset-y-0 right-0 w-32 z-10 pointer-events-none ${theme === 'dark' ? 'bg-gradient-to-l from-[#0f0f12] to-transparent' : 'bg-gradient-to-l from-[#fafaf9] to-transparent'}`} />
+      
+      <motion.div
+        className="flex gap-8 w-max"
+        animate={{
+          x: ["0%", "-33.33%"],
+        }}
+        transition={{
+          x: {
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 30,
+            ease: "linear",
+          },
+        }}
+        style={{
+          animationPlayState: isPaused ? "paused" : "running"
+        }}
+        onHoverStart={() => setIsPaused(true)}
+        onHoverEnd={() => setIsPaused(false)}
+      >
+        {duplicatedItems.map((tool, i) => {
+          const Icon = tool.icon;
+          return (
+            <div 
+              key={i} 
+              className={`flex-shrink-0 w-64 p-8 rounded-3xl text-center border transition-all duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-white/5 hover:border-purple-500/50 hover:bg-[#27272a]' : 'bg-white border-stone-200 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-500/5'}`}
+            >
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm ${theme === 'dark' ? 'bg-[#0f0f12]' : 'bg-stone-50'}`}>
+                <Icon className={`w-8 h-8 ${theme === 'dark' ? 'text-purple-400' : 'text-purple-500'}`} />
+              </div>
+              <h3 className={`font-semibold text-lg mb-2 transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`}>{tool.name}</h3>
+              <p className={`text-xs transition-colors duration-300 uppercase tracking-wider font-medium ${theme === 'dark' ? 'text-stone-500' : 'text-stone-400'}`}>{tool.category}</p>
+            </div>
+          );
+        })}
+      </motion.div>
+    </div>
+  );
+}
 
 function AnimatedCounter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
@@ -308,7 +362,7 @@ export default function Portfolio() {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? theme === 'dark' ? "bg-[#0f0f12]/70 backdrop-blur-xl shadow-sm py-4" : "bg-white/70 backdrop-blur-xl shadow-sm py-4" : "bg-transparent py-6"}`}>
         <div className="max-w-6xl mx-auto px-8 flex items-center justify-between">
           <a href="#" className={`text-xl font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`}>
-            Maryam <span className="text-purple-500 italic">Ibrahim</span>
+            Maryam<span className="text-purple-500 italic">X</span>
           </a>
           <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
@@ -373,7 +427,7 @@ export default function Portfolio() {
           <div className={`space-y-8 transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition-colors duration-300 ${theme === 'dark' ? 'bg-purple-900/20 border-purple-800' : 'bg-purple-50 border-purple-100'}`}>
               <Sparkles className="w-4 h-4 text-purple-500" />
-              <span className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-purple-300' : 'text-purple-600'}`}>Virtual Assistant & Operations Coordinator</span>
+              <span className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-purple-300' : 'text-purple-600'}`}>Client Support & Operations Assistant</span>
             </div>
             
             <h1 className={`text-7xl lg:text-8xl font-light leading-[0.95] tracking-tight transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-900'}`} style={{ fontFamily: "var(--font-heading)" }}>
@@ -467,10 +521,10 @@ export default function Portfolio() {
             
             <div className="space-y-6 pt-8">
               <p className={`text-lg leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>
-                I&apos;m <strong className={theme === 'dark' ? 'text-white' : 'text-stone-900'}>Maryam Abdullahi Ibrahim</strong>, a Virtual Assistant, Administrative Professional, and Operations Coordinator with a passion for making things run smoothly.
+                I&apos;m <strong className={theme === 'dark' ? 'text-white' : 'text-stone-900'}>Maryam Abdullahi Ibrahim</strong>, a Client Support & Operations Specialist with 4+ years managing 700+ client relationships and coordinating 5+ daily training sessions.
               </p>
               <p className={`text-lg leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>
-                Currently working with <strong className={theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}>XM Trading Academy in Kano</strong>, I&apos;ve built and documented real operational systems that keep things running — from client onboarding to weekly reporting. I bring structure to chaos and turn scattered workflows into smooth, repeatable processes.
+                I specialize in building systems that keep businesses organized — from client tracking dashboards to email management workflows. Based in Kano, Nigeria, I work remotely with teams worldwide.
               </p>
               <p className={`text-lg leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>
                 My philosophy is simple: <em className="text-purple-500 font-medium">great operations are invisible.</em> When I do my job well, clients feel cared for, appointments are kept, and things simply work — without anyone noticing the machinery behind the scenes.
@@ -545,7 +599,21 @@ export default function Portfolio() {
                   <div className="flex items-start gap-4 mb-4">
                     <h3 className={`text-2xl font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`} style={{ fontFamily: "var(--font-heading)" }}>{item.title}</h3>
                   </div>
-                  <p className={`mb-6 leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.description}</p>
+                  <p className={`mb-4 leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.description}</p>
+                  
+                  {item.demonstrates && (
+                    <div className="mb-6 space-y-1">
+                      <p className={`text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-purple-400' : 'text-purple-600'}`}>What this demonstrates:</p>
+                      <ul className={`text-sm space-y-1 transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>
+                        {item.demonstrates.map((point, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <div className="w-1 h-1 rounded-full bg-purple-400" />
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   
                   {item.stats && (
                     <div className="grid grid-cols-4 gap-4">
@@ -583,26 +651,43 @@ export default function Portfolio() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <SectionLabel>Tools</SectionLabel>
-            <h2 className={`text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight transition-colors duration-300 ${theme === 'dark' ? 'text-white' : ''}`} style={{ fontFamily: "var(--font-heading)" }}>
+            <h2 className={`text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight transition-colors duration-300 mb-6 ${theme === 'dark' ? 'text-white' : ''}`} style={{ fontFamily: "var(--font-heading)" }}>
               What I <span className="italic text-purple-400">use</span>
+            </h2>
+            <p className={`text-lg transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>
+              Tools I use to manage client communication, operations, and workflow efficiently.
+            </p>
+          </div>
+          
+          <InfiniteMarquee items={tools} theme={theme} />
+        </div>
+      </section>
+
+      {/* Why Work With Me Section */}
+      <section id="why-hire" className={`py-28 px-8 transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0f0f12]' : 'bg-stone-50'}`}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <SectionLabel>Value</SectionLabel>
+            <h2 className={`text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight transition-colors duration-300 ${theme === 'dark' ? 'text-white' : ''}`} style={{ fontFamily: "var(--font-heading)" }}>
+              Why Work <span className="italic text-purple-400">With Me</span>
             </h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {tools.map((tool, i) => {
-              const Icon = tool.icon;
-              return (
-                <div key={i} className={`p-6 rounded-2xl text-center hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-1 cursor-default group ${theme === 'dark' ? 'bg-[#27272a]/80 hover:bg-[#27272a]' : 'bg-stone-50/80 hover:bg-white'}`}>
-                  <div className="relative z-10">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110 ${theme === 'dark' ? 'bg-[#18181b]' : 'bg-white shadow-sm group-hover:shadow-md'}`}>
-                      <Icon className={`w-7 h-7 ${theme === 'dark' ? 'text-purple-400' : 'text-purple-500'}`} />
-                    </div>
-                    <h3 className={`font-medium mb-2 transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-700'}`}>{tool.name}</h3>
-                    <Badge variant="outline" className={`text-xs rounded-full transition-colors duration-300 ${theme === 'dark' ? 'border-stone-600 text-stone-400' : 'border-stone-200 text-stone-500'}`}>{tool.category}</Badge>
-                  </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Organization", desc: "Strong organizational and multitasking skills to keep your business on track." },
+              { title: "Communication", desc: "Clear and professional communication across all client touchpoints." },
+              { title: "Scalability", desc: "Ability to manage high-volume client interactions without losing quality." },
+              { title: "Reliability", desc: "Detail-oriented and reliable in fast-paced, demanding environments." }
+            ].map((item, i) => (
+              <div key={i} className={`p-8 rounded-3xl transition-all duration-300 ${theme === 'dark' ? 'bg-[#18181b] hover:bg-[#27272a]' : 'bg-white hover:shadow-xl hover:shadow-purple-500/5'}`}>
+                <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 text-purple-500">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
-              );
-            })}
+                <h3 className={`text-xl font-medium mb-3 transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`} style={{ fontFamily: "var(--font-heading)" }}>{item.title}</h3>
+                <p className={`leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -703,7 +788,7 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className={`py-10 px-8 border-t transition-colors duration-300 ${theme === 'dark' ? 'border-white/10' : 'border-stone-100'}`}>
         <div className={`max-w-6xl mx-auto text-center transition-colors duration-300 ${theme === 'dark' ? 'text-stone-500' : 'text-stone-400'}`}>
-          <p className="text-sm">© 2026 Maryam Abdullahi Ibrahim · Virtual Assistant & Operations Coordinator · Kano, Nigeria</p>
+          <p className="text-sm">© 2026 Maryam Ibrahim · Client Support & Operations Specialist · Kano, Nigeria</p>
         </div>
       </footer>
 
