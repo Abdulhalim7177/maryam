@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 import { 
   Handshake, 
@@ -35,7 +36,7 @@ import {
   Layout
 } from "lucide-react";
 
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -90,7 +91,8 @@ const workItems = [
     title: "Weekly Operations Report",
     description: "Comprehensive metrics tracking 28 clients, 10 new onboardings, 18 follow-ups, and 12 sessions scheduled within a single week at XM Trading Academy.",
     demonstrates: ["Organization and data management", "Operational efficiency", "Attention to detail"],
-    image: "/images/Screenshot 2026-04-03 164728.png",
+    image: "/images/weekly operations.png",
+    link: "https://docs.google.com/document/d/1KRXJpzMsQEuwbTmL2xpSQVM1ppGHLQf7KoKhMeK1K-A/edit?usp=sharing",
     stats: [
       { value: 28, label: "Clients Managed", icon: Users },
       { value: 10, label: "New Onboarded", icon: TrendingUp },
@@ -102,14 +104,16 @@ const workItems = [
     title: "Email Management System",
     description: "Structured inbox triage and response system with categorized templates for inquiries, follow-ups, reminders, and complaint resolution.",
     demonstrates: ["Clear and professional communication", "Inbox organization", "Client relationship tracking"],
-    image: "/images/Screenshot 2026-04-03 165131.png",
+    image: "/images/Email management.png",
+    link: "https://docs.google.com/document/d/1098W0dSJjeKwfCSX-qP6Ae_EV_r6b5qQmX0GB14ctts/edit?tab=t.0#heading=h.6ktasxa0y7gt",
     tags: ["Inbox Triage", "Templates", "Priority Sorting"],
   },
   {
     title: "Client Onboarding SOP",
     description: "7-step documented process from initial contact to fully onboarded client, including welcome messages and tracker setup.",
     demonstrates: ["System building", "Process documentation", "Seamless client experience"],
-    image: "/images/Screenshot 2026-04-03 164558.png",
+    image: "/images/Client Relationship.png",
+    link: "https://docs.google.com/document/d/1wldsxpe_ZmDYEN8e1rkb2Egq6lwAPvebkrpWmLlQ4J4/edit?tab=t.0",
     tags: ["7-Step Process", "Welcome Flow", "Documentation"],
   },
   {
@@ -278,6 +282,40 @@ export default function Portfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentHeroImage, setCurrentHeroImage] = useState(0);
+
+  const [showMoreWork, setShowMoreWork] = useState(false);
+
+  const heroImages = [
+    "/images/IMG_6686.PNG",
+    "/images/IMG_6683.PNG",
+    "/images/IMG_6687.PNG"
+  ];
+
+  const additionalWorkItems = [
+    {
+      title: "Operational SOP Document",
+      description: "Full professional SOP manual for Client Relations & Operations, detailing the exact systems built for XM Trading Academy.",
+      image: "/images/Client Relationship.png",
+      link: "https://docs.google.com/document/d/1wldsxpe_ZmDYEN8e1rkb2Egq6lwAPvebkrpWmLlQ4J4/edit?tab=t.0",
+      tags: ["Internal Ops", "SOP Manual", "System Design"],
+    },
+    {
+      title: "Email Triage Framework",
+      description: "Visual breakdown of the structured approach to managing high-volume client communication and priority sorting.",
+      image: "/images/Email management.png",
+      link: "https://docs.google.com/document/d/1098W0dSJjeKwfCSX-qP6Ae_EV_r6b5qQmX0GB14ctts/edit?tab=t.0#heading=h.6ktasxa0y7gt",
+      tags: ["Communication", "Workflows", "Strategy"],
+    },
+    {
+      title: "Weekly Performance Metrics",
+      description: "A detailed look at the weekly operations report format used to track 700+ client records and 40-60 daily interactions.",
+      image: "/images/weekly operations.png",
+      link: "https://docs.google.com/document/d/1KRXJpzMsQEuwbTmL2xpSQVM1ppGHLQf7KoKhMeK1K-A/edit?usp=sharing",
+      tags: ["Data Analytics", "Reporting", "Efficiency"],
+    }
+  ];
 
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
@@ -289,6 +327,11 @@ export default function Portfolio() {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Hero image slider timer
+    const heroTimer = setInterval(() => {
+      setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
 
     // Scroll reveal animation
     const observerOptions = {
@@ -454,15 +497,25 @@ export default function Portfolio() {
             {/* Main Image */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-200 via-violet-200 to-indigo-200 rounded-[3rem] blur-3xl opacity-50" />
-              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-stone-900/5">
-                <Image
-                  src="/images/IMG_6686.PNG"
-                  alt="Maryam Abdullahi Ibrahim"
-                  width={400}
-                  height={500}
-                  className="w-full h-auto object-cover"
-                  priority
-                />
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-stone-900/5 aspect-[4/5] bg-stone-100 dark:bg-stone-900">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentHeroImage}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={heroImages[currentHeroImage]}
+                      alt="Maryam Ibrahim"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
             
@@ -479,7 +532,7 @@ export default function Portfolio() {
               </div>
             </div>
             
-            <div className={`absolute -top-6 -right-6 rounded-2xl p-5 shadow-xl border transition-all duration-500 ${theme === 'dark' ? 'bg-[#27272a]/90 border-white/10' : 'bg-white/90 border-stone-100/50'} backdrop-blur-md`}>
+            <div className={`absolute -top-6 -right-6 rounded-2xl p-5 shadow-xl border transition-all duration-500 ${theme === 'dark' ? 'bg-[#27272a]/90 border-white/10' : 'bg-white/90 border-stone-100/50'} backdrop-blur-md z-20`}>
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-300 ${theme === 'dark' ? 'bg-violet-900/30' : 'bg-violet-50'}`}>
                   <Clock className={`w-5 h-5 transition-colors duration-300 ${theme === 'dark' ? 'text-violet-400' : 'text-violet-500'}`} />
@@ -490,6 +543,37 @@ export default function Portfolio() {
                 </div>
               </div>
             </div>
+
+            {/* Single Large Animated B&W Professional Card */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1, 
+                rotate: -8,
+                y: [0, -15, 0] 
+              }}
+              transition={{ 
+                opacity: { duration: 0.8, delay: 1.2 },
+                scale: { duration: 0.8, delay: 1.2 },
+                rotate: { duration: 0.8, delay: 1.2 },
+                y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+              }}
+              className={`absolute -bottom-12 -right-4 md:-right-12 p-3 rounded-[2rem] border shadow-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#18181b] border-white/10' : 'bg-white border-stone-200'} backdrop-blur-md z-30`}
+            >
+              <div className="relative w-32 h-44 md:w-40 md:h-56 rounded-[1.5rem] overflow-hidden grayscale contrast-125 brightness-90">
+                <Image
+                  src="/images/IMG_6693.PNG"
+                  alt="Professional Context"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-[10px] uppercase tracking-tighter">Ops Expert</Badge>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -584,7 +668,10 @@ export default function Portfolio() {
                 key={i}
                 className={`group rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-2 ring-1 ${theme === 'dark' ? 'bg-[#27272a]/80 hover:bg-[#27272a] border-white/10' : 'bg-stone-50/80 hover:bg-white border-stone-900/5'} ${i === 0 ? "md:col-span-2" : ""}`}
               >
-                <div className="relative h-64 overflow-hidden">
+                <div 
+                  className="relative h-64 overflow-hidden cursor-zoom-in"
+                  onClick={() => setSelectedImage(item.image)}
+                >
                   <Image
                   src={item.image}
                   alt={item.title}
@@ -592,7 +679,12 @@ export default function Portfolio() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 text-white shadow-xl">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="p-8">
@@ -633,15 +725,90 @@ export default function Portfolio() {
                   )}
                   
                   {item.tags && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-8">
                       {item.tags.map((tag, j) => (
                         <Badge key={j} variant="secondary" className={`rounded-full px-3 transition-colors duration-300 ${theme === 'dark' ? 'bg-purple-900/30 text-purple-300' : 'bg-purple-50 text-purple-600'}`}>{tag}</Badge>
                       ))}
                     </div>
                   )}
+
+                  {item.link && (
+                    <Button 
+                      asChild
+                      className="w-full rounded-full py-7 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-xl shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1.5 active:scale-[0.98]"
+                    >
+                      <a href={item.link} target="_blank" rel="noopener noreferrer">
+                        Access Full Case Study
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </TiltCard>
             ))}
+          </div>
+
+          {/* View More Section */}
+          <div className="mt-16 text-center">
+            <AnimatePresence>
+              {showMoreWork && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="grid md:grid-cols-3 gap-6 mb-12">
+                    {additionalWorkItems.map((item, i) => (
+                      <TiltCard
+                        key={i}
+                        className={`group rounded-3xl overflow-hidden border transition-all duration-500 hover:shadow-xl ${theme === 'dark' ? 'bg-[#27272a]/50 border-white/5' : 'bg-stone-50/50 border-stone-200'}`}
+                      >
+                        <div 
+                          className="relative h-48 overflow-hidden cursor-zoom-in"
+                          onClick={() => setSelectedImage(item.image)}
+                        >
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Sparkles className="text-white w-6 h-6" />
+                          </div>
+                        </div>
+                        <div className="p-6 text-left">
+                          <h4 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`}>{item.title}</h4>
+                          <p className={`text-sm mb-6 line-clamp-2 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.description}</p>
+                          <Button 
+                            asChild
+                            variant="outline"
+                            className={`w-full rounded-full border-purple-500/30 hover:border-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300 ${theme === 'dark' ? 'text-purple-400' : 'text-purple-600'}`}
+                          >
+                            <a href={item.link} target="_blank" rel="noopener noreferrer">View Document</a>
+                          </Button>
+                        </div>
+                      </TiltCard>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Button 
+              onClick={() => setShowMoreWork(!showMoreWork)}
+              variant="outline"
+              className={`rounded-full px-10 py-6 border-2 transition-all duration-300 ${theme === 'dark' ? 'border-stone-800 text-stone-300 hover:bg-stone-800' : 'border-stone-200 text-stone-600 hover:bg-stone-50'}`}
+            >
+              {showMoreWork ? "Show Less" : "View Case Study Documents"}
+              <motion.div
+                animate={{ rotate: showMoreWork ? 180 : 0 }}
+                className="ml-2"
+              >
+                <ArrowDown className="w-4 h-4" />
+              </motion.div>
+            </Button>
           </div>
         </div>
       </section>
@@ -812,6 +979,63 @@ export default function Portfolio() {
           <ArrowUp className="w-6 h-6" />
         </button>
       </div>
+
+      {/* Full Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0f0f12]/95 backdrop-blur-md"
+          >
+            {/* Close button - separate from the zoomable area */}
+            <button 
+              onClick={() => {
+                setSelectedImage(null);
+              }}
+              className="absolute top-6 right-6 z-[110] p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all border border-white/10"
+            >
+              <X className="w-8 h-8" />
+            </button>
+
+            <div 
+              className="relative w-full h-full flex items-center justify-center overflow-hidden"
+              onClick={() => setSelectedImage(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative max-w-full max-h-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="text-center mb-4 md:hidden">
+                  <p className="text-stone-400 text-xs uppercase tracking-widest flex items-center justify-center gap-2">
+                    <Sparkles className="w-3 h-3" /> Double tap to zoom & drag
+                  </p>
+                </div>
+
+                <motion.div
+                  drag
+                  dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+                  dragElastic={0.1}
+                  whileTap={{ scale: 1.5 }}
+                  className="cursor-grab active:cursor-grabbing"
+                >
+                  <Image
+                    src={selectedImage}
+                    alt="Project Preview"
+                    width={1200}
+                    height={800}
+                    className="w-full h-auto object-contain max-h-[80vh] rounded-lg shadow-2xl pointer-events-none"
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
