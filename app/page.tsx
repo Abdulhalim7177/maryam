@@ -2,13 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 
 import { 
   Handshake, 
@@ -36,7 +34,7 @@ import {
   Layout
 } from "lucide-react";
 
-import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -45,6 +43,36 @@ const navLinks = [
   { name: "Why MaryamX", href: "#why-hire" },
   { name: "Tools", href: "#tools" },
   { name: "Contact", href: "#contact" },
+];
+
+const heroImages = [
+  "/images/IMG_6686.PNG",
+  "/images/IMG_6683.PNG",
+  "/images/IMG_6687.PNG"
+];
+
+const additionalWorkItems = [
+  {
+    title: "Operational SOP Document",
+    description: "Full professional SOP manual for Client Relations & Operations, detailing the exact systems built for XM Trading Academy.",
+    image: "/images/Client Relationship.png",
+    link: "https://docs.google.com/document/d/1wldsxpe_ZmDYEN8e1rkb2Egq6lwAPvebkrpWmLlQ4J4/edit?tab=t.0",
+    tags: ["Internal Ops", "SOP Manual", "System Design"],
+  },
+  {
+    title: "Email Triage Framework",
+    description: "Visual breakdown of the structured approach to managing high-volume client communication and priority sorting.",
+    image: "/images/Email management.png",
+    link: "https://docs.google.com/document/d/1098W0dSJjeKwfCSX-qP6Ae_EV_r6b5qQmX0GB14ctts/edit?tab=t.0#heading=h.6ktasxa0y7gt",
+    tags: ["Communication", "Workflows", "Strategy"],
+  },
+  {
+    title: "Weekly Performance Metrics",
+    description: "A detailed look at the weekly operations report format used to track 700+ client records and 40-60 daily interactions.",
+    image: "/images/weekly operations.png",
+    link: "https://docs.google.com/document/d/1KRXJpzMsQEuwbTmL2xpSQVM1ppGHLQf7KoKhMeK1K-A/edit?usp=sharing",
+    tags: ["Data Analytics", "Reporting", "Efficiency"],
+  }
 ];
 
 const services = [
@@ -266,7 +294,6 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  const [theme] = useState<"light" | "dark">("light");
   return (
     <span className={`text-xs font-medium uppercase tracking-[0.2em] text-purple-500/70 mb-3 block`}>
       {children}
@@ -287,36 +314,6 @@ export default function Portfolio() {
 
   const [showMoreWork, setShowMoreWork] = useState(false);
 
-  const heroImages = [
-    "/images/IMG_6686.PNG",
-    "/images/IMG_6683.PNG",
-    "/images/IMG_6687.PNG"
-  ];
-
-  const additionalWorkItems = [
-    {
-      title: "Operational SOP Document",
-      description: "Full professional SOP manual for Client Relations & Operations, detailing the exact systems built for XM Trading Academy.",
-      image: "/images/Client Relationship.png",
-      link: "https://docs.google.com/document/d/1wldsxpe_ZmDYEN8e1rkb2Egq6lwAPvebkrpWmLlQ4J4/edit?tab=t.0",
-      tags: ["Internal Ops", "SOP Manual", "System Design"],
-    },
-    {
-      title: "Email Triage Framework",
-      description: "Visual breakdown of the structured approach to managing high-volume client communication and priority sorting.",
-      image: "/images/Email management.png",
-      link: "https://docs.google.com/document/d/1098W0dSJjeKwfCSX-qP6Ae_EV_r6b5qQmX0GB14ctts/edit?tab=t.0#heading=h.6ktasxa0y7gt",
-      tags: ["Communication", "Workflows", "Strategy"],
-    },
-    {
-      title: "Weekly Performance Metrics",
-      description: "A detailed look at the weekly operations report format used to track 700+ client records and 40-60 daily interactions.",
-      image: "/images/weekly operations.png",
-      link: "https://docs.google.com/document/d/1KRXJpzMsQEuwbTmL2xpSQVM1ppGHLQf7KoKhMeK1K-A/edit?usp=sharing",
-      tags: ["Data Analytics", "Reporting", "Efficiency"],
-    }
-  ];
-
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
@@ -326,7 +323,9 @@ export default function Portfolio() {
   };
 
   useEffect(() => {
-    setMounted(true);
+    const mountedTimeout = setTimeout(() => {
+      setMounted(true);
+    }, 0);
     
     // Hero image slider timer
     const heroTimer = setInterval(() => {
@@ -371,7 +370,12 @@ export default function Portfolio() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(mountedTimeout);
+      clearInterval(heroTimer);
+      revealObserver.disconnect();
+    };
   }, []);
 
   const handleFormSubmit = (e: React.FormEvent) => {
