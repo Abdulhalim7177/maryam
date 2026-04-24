@@ -114,6 +114,7 @@ const tools = [
 ];
 
 const workItems = [
+ 
   {
     title: "Weekly Operations Report",
     description: "Comprehensive metrics tracking 28 clients, 10 new onboardings, 18 follow-ups, and 12 sessions scheduled within a single week at XM Trading Academy.",
@@ -150,10 +151,32 @@ const workItems = [
     image: "/images/Screenshot 2026-03-29 191541.png",
     tags: ["Google Sheets", "Live Dashboard", "Status Tracking"],
   },
+
+   {
+    title: "LifteriCo Mission Deck",
+    description: "Professional presentation and slide design for LifteriCo, a tech-powered pathway for African youth. Designed to communicate vision, tech training programs, and social impact mission.",
+    demonstrates: ["Presentation Design", "Brand Identity", "Social Impact Communication"],
+    image: "/images/IMG_6701.PNG",
+    tags: ["Canva Design", "Strategy", "Education"],
+  },
+  {
+    title: "XM Trading Marketing Materials",
+    description: "High-conversion marketing flyers and promotional graphics for XM Trading Academy, streamlining the enrollment process for crypto training sessions.",
+    demonstrates: ["Marketing Design", "Direct Response Visuals", "Academy Operations"],
+    image: "/images/IMG_6703.PNG",
+    tags: ["Canva Design", "Marketing", "Crypto"],
+  },
+  {
+    title: "Sweet with Meehar Visual Identity",
+    description: "Creative brand visuals and promotional posters for 'Sweet with Meehar', focusing on aesthetic appeal and engaging product presentation for the confectionery niche.",
+    demonstrates: ["Creative Direction", "Aesthetic Design", "Visual Storytelling"],
+    image: "/images/IMG_6704.PNG",
+    tags: ["Canva Design", "Branding", "Creative"],
+  },
 ];
 
 const contactMethods = [
-  { icon: Mail, label: "Email", value: "meeharabdullahi2026@gmai.com", href: "mailto:meeharabdullahi2026@gmai.com" },
+  { icon: Mail, label: "Email", value: "meeharabdullahi2026@gmail.com", href: "mailto:meeharabdullahi2026@gmail.com" },
   { icon: Handshake, label: "LinkedIn", value: "maryam-abdullahi-ibrahim", href: "https://linkedin.com/in/maryam-abdullahi-ibrahim" },
   { icon: Zap, label: "Telegram", value: "@maryam_supportpro", href: "https://t.me/maryam_supportpro" },
   { icon: MapPin, label: "Location", value: "Kano, Nigeria", href: "#" },
@@ -312,6 +335,7 @@ export default function Portfolio() {
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const [showMoreWork, setShowMoreWork] = useState(false);
+  const [service, setService] = useState("");
 
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
@@ -377,13 +401,37 @@ export default function Portfolio() {
     };
   }, []);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus("sending");
-    setTimeout(() => {
-      setFormStatus("sent");
-      setTimeout(() => setFormStatus("idle"), 3000);
-    }, 1500);
+
+    const formData = new FormData(e.currentTarget);
+    // Ensure service is included if using Shadcn Select
+    if (service) formData.append("service", service);
+
+    try {
+      // NOTE: Replace 'YOUR_FORMSPREE_ID' with your actual Formspree ID
+      // You can get one for free at https://formspree.io
+      const response = await fetch("https://formspree.io/f/mjkggeoz", {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setFormStatus("sent");
+        e.currentTarget.reset();
+        setService("");
+        setTimeout(() => setFormStatus("idle"), 3000);
+      } else {
+        throw new Error("Form submission failed");
+      }
+    } catch (error) {
+      setFormStatus("idle");
+      alert("Oops! There was a problem submitting your form. Please try again or contact me directly at meeharabdullahi2026@gmail.com");
+    }
   };
 
   return (
@@ -969,15 +1017,15 @@ export default function Portfolio() {
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Name</label>
-                  <Input placeholder="Your name" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
+                  <Input name="name" required placeholder="Your name" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
                 </div>
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Email or WhatsApp</label>
-                  <Input placeholder="How should I reach you?" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
+                  <Input name="contact" required placeholder="How should I reach you?" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
                 </div>
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Service</label>
-                  <Select>
+                  <Select onValueChange={setService} value={service}>
                     <SelectTrigger className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}>
                       <SelectValue placeholder="Select a service" />
                     </SelectTrigger>
@@ -994,7 +1042,7 @@ export default function Portfolio() {
                 </div>
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Message</label>
-                  <Textarea placeholder="Tell me about your project..." className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'} min-h-[140px]`} />
+                  <Textarea name="message" required placeholder="Tell me about your project..." className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'} min-h-[140px]`} />
                 </div>
                 <Button
                   type="submit"
