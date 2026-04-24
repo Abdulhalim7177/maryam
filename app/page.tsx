@@ -46,8 +46,7 @@ const navLinks = [
 ];
 
 const heroImages = [
-  "/images/IMG_6686.PNG",
-  "/images/IMG_6683.PNG",
+  "/images/IMG_6689.PNG",
   "/images/IMG_6687.PNG"
 ];
 
@@ -486,13 +485,17 @@ export default function Portfolio() {
             </p>
             
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-8 py-6 text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1">
-                View My Work
-                <ArrowDown className="ml-2 w-4 h-4" />
+              <Button asChild className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-8 py-6 text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1">
+                <a href="#work">
+                  View My Work
+                  <ArrowDown className="ml-2 w-4 h-4" />
+                </a>
               </Button>
-              <Button variant="ghost" className={`hover:text-purple-500 rounded-full px-8 py-6 text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-600'}`}>
-                Let&apos;s Talk
-                <ArrowRight className="ml-2 w-4 h-4" />
+              <Button asChild variant="ghost" className={`hover:text-purple-500 rounded-full px-8 py-6 text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-600'}`}>
+                <a href="#contact">
+                  Let&apos;s Talk
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </a>
               </Button>
             </div>
           </div>
@@ -548,7 +551,7 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* Single Large Animated B&W Professional Card */}
+            {/* Single Large Animated Professional Card */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
               animate={{ 
@@ -563,18 +566,18 @@ export default function Portfolio() {
                 rotate: { duration: 0.8, delay: 1.2 },
                 y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
               }}
-              className={`absolute -bottom-12 -right-4 md:-right-12 p-3 rounded-[2rem] border shadow-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#18181b] border-white/10' : 'bg-white border-stone-200'} backdrop-blur-md z-30`}
+              className={`absolute -bottom-12 -right-4 md:-right-12 p-3 rounded-[2.5rem] border shadow-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#18181b] border-white/10' : 'bg-white border-stone-200'} backdrop-blur-md z-30`}
             >
-              <div className="relative w-32 h-44 md:w-40 md:h-56 rounded-[1.5rem] overflow-hidden grayscale contrast-125 brightness-90">
+              <div className="relative w-32 h-44 md:w-44 md:h-60 rounded-[2rem] overflow-hidden grayscale contrast-125 brightness-90">
                 <Image
                   src="/images/IMG_6693.PNG"
                   alt="Professional Context"
                   fill
-                  className="object-cover"
+                  className="object-cover hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-[10px] uppercase tracking-tighter">Ops Expert</Badge>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
+                <div className="absolute bottom-5 left-5">
+                  <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-[10px] uppercase tracking-wider px-3">Expert Support</Badge>
                 </div>
               </div>
             </motion.div>
@@ -837,28 +840,90 @@ export default function Portfolio() {
       {/* Why Work With Me Section */}
       <section id="why-hire" className={`py-28 px-8 transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0f0f12]' : 'bg-stone-50'}`}>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <SectionLabel>Value</SectionLabel>
-            <h2 className={`text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight transition-colors duration-300 ${theme === 'dark' ? 'text-white' : ''}`} style={{ fontFamily: "var(--font-heading)" }}>
-              Why Work <span className="italic text-purple-400">With Me</span>
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Organization", desc: "Strong organizational and multitasking skills to keep your business on track." },
-              { title: "Communication", desc: "Clear and professional communication across all client touchpoints." },
-              { title: "Scalability", desc: "Ability to manage high-volume client interactions without losing quality." },
-              { title: "Reliability", desc: "Detail-oriented and reliable in fast-paced, demanding environments." }
-            ].map((item, i) => (
-              <div key={i} className={`p-8 rounded-3xl transition-all duration-300 ${theme === 'dark' ? 'bg-[#18181b] hover:bg-[#27272a]' : 'bg-white hover:shadow-xl hover:shadow-purple-500/5'}`}>
-                <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 text-purple-500">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <h3 className={`text-xl font-medium mb-3 transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`} style={{ fontFamily: "var(--font-heading)" }}>{item.title}</h3>
-                <p className={`leading-relaxed transition-colors duration-300 ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.desc}</p>
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="space-y-12">
+              <div>
+                <SectionLabel>Value</SectionLabel>
+                <h2 className={`text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight transition-colors duration-300 ${theme === 'dark' ? 'text-white' : ''}`} style={{ fontFamily: "var(--font-heading)" }}>
+                  Why Work <span className="italic text-purple-400">With Me</span>
+                </h2>
               </div>
-            ))}
+              
+              <div className="space-y-8">
+                {[
+                  { title: "Organization", desc: "Strong organizational and multitasking skills to keep your business on track.", icon: Layout },
+                  { title: "Communication", desc: "Clear and professional communication across all client touchpoints.", icon: MessageCircle },
+                  { title: "Scalability", desc: "Ability to manage high-volume client interactions without losing quality.", icon: TrendingUp },
+                  { title: "Reliability", desc: "Detail-oriented and reliable in fast-paced, demanding environments.", icon: Clock }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.5 }}
+                    className="flex gap-6 group"
+                  >
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${theme === 'dark' ? 'bg-purple-900/20 text-purple-400 group-hover:bg-purple-500 group-hover:text-white' : 'bg-purple-50 text-purple-600 group-hover:bg-purple-500 group-hover:text-white'}`}>
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-medium mb-2 transition-colors duration-300 ${theme === 'dark' ? 'text-white' : 'text-stone-800'}`} style={{ fontFamily: "var(--font-heading)" }}>{item.title}</h3>
+                      <p className={`leading-relaxed transition-colors duration-300 max-w-sm ${theme === 'dark' ? 'text-stone-400' : 'text-stone-500'}`}>{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative">
+              {/* Main Image for this section */}
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-[4/5] z-10 border border-stone-200/50 dark:border-white/10">
+                <Image
+                  src="/images/IMG_6693.PNG"
+                  alt="Professional Excellence"
+                  fill
+                  className="object-cover"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ${theme === 'dark' ? 'from-[#0f0f12]/60 to-transparent' : 'from-stone-900/20 to-transparent'}`} />
+              </div>
+
+              {/* Floating Image Implementation similar to Hero */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+                whileInView={{ 
+                  opacity: 1, 
+                  scale: 1, 
+                  rotate: 8,
+                  y: [0, 20, 0] 
+                }}
+                viewport={{ once: true }}
+                transition={{ 
+                  opacity: { duration: 0.8 },
+                  scale: { duration: 0.8 },
+                  y: { repeat: Infinity, duration: 5, ease: "easeInOut" }
+                }}
+                className={`absolute -bottom-10 -left-10 md:-left-20 p-3 rounded-[2.5rem] border shadow-2xl transition-all duration-500 ${theme === 'dark' ? 'bg-[#18181b] border-white/10' : 'bg-white border-stone-200'} backdrop-blur-md z-20`}
+              >
+                <div className="relative w-32 h-44 md:w-48 md:h-64 rounded-[2rem] overflow-hidden">
+                  <Image
+                    src="/images/IMG_6686.PNG"
+                    alt="Operations Context"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2 text-[10px] text-white text-center font-medium uppercase tracking-widest">
+                      Workflow Optimized
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Background accent */}
+              <div className={`absolute -top-10 -right-10 w-64 h-64 rounded-full blur-3xl opacity-20 animate-pulse-soft ${theme === 'dark' ? 'bg-purple-500' : 'bg-purple-300'}`} />
+            </div>
           </div>
         </div>
       </section>
