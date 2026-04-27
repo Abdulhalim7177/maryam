@@ -114,7 +114,6 @@ const tools = [
 ];
 
 const workItems = [
- 
   {
     title: "Weekly Operations Report",
     description: "Comprehensive metrics tracking 28 clients, 10 new onboardings, 18 follow-ups, and 12 sessions scheduled within a single week at XM Trading Academy.",
@@ -151,12 +150,11 @@ const workItems = [
     image: "/images/Screenshot 2026-03-29 191541.png",
     tags: ["Google Sheets", "Live Dashboard", "Status Tracking"],
   },
-
-   {
+  {
     title: "LifteriCo Mission Deck",
     description: "Professional presentation and slide design for LifteriCo, a tech-powered pathway for African youth. Designed to communicate vision, tech training programs, and social impact mission.",
     demonstrates: ["Presentation Design", "Brand Identity", "Social Impact Communication"],
-    image: "/images/IMG_6701.PNG",
+    image: "/images/IMG_6704.PNG",
     tags: ["Canva Design", "Strategy", "Education"],
   },
   {
@@ -170,7 +168,7 @@ const workItems = [
     title: "Sweet with Meehar Visual Identity",
     description: "Creative brand visuals and promotional posters for 'Sweet with Meehar', focusing on aesthetic appeal and engaging product presentation for the confectionery niche.",
     demonstrates: ["Creative Direction", "Aesthetic Design", "Visual Storytelling"],
-    image: "/images/IMG_6704.PNG",
+    image: "/images/IMG_6701.PNG",
     tags: ["Canva Design", "Branding", "Creative"],
   },
 ];
@@ -410,9 +408,8 @@ export default function Portfolio() {
     if (service) formData.append("service", service);
 
     try {
-      // NOTE: Replace 'YOUR_FORMSPREE_ID' with your actual Formspree ID
-      // You can get one for free at https://formspree.io
-      const response = await fetch("https://formspree.io/f/mjkggeoz", {
+      // Updated Formspree ID: mvzdlken
+      const response = await fetch("https://formspree.io/f/mvzdlken", {
         method: "POST",
         body: formData,
         headers: {
