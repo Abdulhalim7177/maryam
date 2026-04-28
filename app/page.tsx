@@ -1022,7 +1022,7 @@ export default function Portfolio() {
                 </div>
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Service</label>
-                  <Select onValueChange={setService} value={service}>
+                  <Select onValueChange={(value) => setService(value || "")} value={service}>
                     <SelectTrigger className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}>
                       <SelectValue placeholder="Select a service" />
                     </SelectTrigger>
