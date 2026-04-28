@@ -73,9 +73,9 @@
   --chart-4: #c4b5fd;
   --chart-5: #ddd6fe;
   --radius: 1rem;
-  --font-heading: 'Playfair Display', serif;
-  --font-sans: 'DM Sans', sans-serif;
-  --font-body: 'Inter', sans-serif;
+--font-heading: 'Fraunces', serif;
+--font-sans: 'Inter', sans-serif;
+--font-body: 'Inter', sans-serif;
 
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: rgba(99, 102, 241, 0.12);
@@ -93,12 +93,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
   html {
     @apply font-sans scroll-smooth;
   }
