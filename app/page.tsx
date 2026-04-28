@@ -154,7 +154,7 @@ const workItems = [
     title: "LifteriCo Mission Deck",
     description: "Professional presentation and slide design for LifteriCo, a tech-powered pathway for African youth. Designed to communicate vision, tech training programs, and social impact mission.",
     demonstrates: ["Presentation Design", "Brand Identity", "Social Impact Communication"],
-    image: "/images/IMG_6704.PNG",
+    image: "/images/IMG_6701.PNG",
     tags: ["Canva Design", "Strategy", "Education"],
   },
   {
@@ -168,7 +168,7 @@ const workItems = [
     title: "Sweet with Meehar Visual Identity",
     description: "Creative brand visuals and promotional posters for 'Sweet with Meehar', focusing on aesthetic appeal and engaging product presentation for the confectionery niche.",
     demonstrates: ["Creative Direction", "Aesthetic Design", "Visual Storytelling"],
-    image: "/images/IMG_6701.PNG",
+    image: "/images/IMG_6704.PNG",
     tags: ["Canva Design", "Branding", "Creative"],
   },
 ];
