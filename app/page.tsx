@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
 import { 
@@ -99,6 +98,11 @@ const services = [
     icon: BarChart3,
     title: "Data Tracking & Reporting",
     description: "Weekly performance reports, client engagement tracking, and process improvement.",
+  },
+  {
+    icon: Zap,
+    title: "And Lots More",
+    description: "Tailored operational support to meet your specific business needs beyond the listed services.",
   },
 ];
 
@@ -327,13 +331,20 @@ export default function Portfolio() {
   const [formStatus, setFormStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
 
   const [showMoreWork, setShowMoreWork] = useState(false);
-  const [service, setService] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
+
+  const toggleService = (serviceId: string) => {
+    setSelectedServices(prev => 
+      prev.includes(serviceId) ? prev.filter(s => s !== serviceId) : [...prev, serviceId]
+    );
+  };
 
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
@@ -404,8 +415,10 @@ export default function Portfolio() {
     setFormStatus("sending");
 
     const formData = new FormData(e.currentTarget);
-    // Ensure service is included if using Shadcn Select
-    if (service) formData.append("service", service);
+    // Ensure selected services are included
+    if (selectedServices.length > 0) {
+      formData.append("services", selectedServices.join(", "));
+    }
 
     try {
       // Updated Formspree ID: mvzdlken
@@ -420,7 +433,7 @@ export default function Portfolio() {
       if (response.ok) {
         setFormStatus("sent");
         e.currentTarget.reset();
-        setService("");
+        setSelectedServices([]);
         setTimeout(() => setFormStatus("idle"), 3000);
       } else {
         throw new Error("Form submission failed");
@@ -1017,25 +1030,113 @@ export default function Portfolio() {
                   <Input name="name" required placeholder="Your name" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
                 </div>
                 <div className="space-y-2">
-                  <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Email or WhatsApp</label>
-                  <Input name="contact" required placeholder="How should I reach you?" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
+                  <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Enter your email or WhatsApp No</label>
+                  <Input name="contact" required placeholder="Enter your email or WhatsApp No" className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white placeholder:text-stone-500' : 'bg-stone-50 border-stone-200'}`} />
                 </div>
-                <div className="space-y-2">
-                  <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Service</label>
-                  <Select onValueChange={(value) => setService(value || "")} value={service}>
-                    <SelectTrigger className={`transition-colors duration-300 ${theme === 'dark' ? 'bg-[#18181b] border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}>
-                      <SelectValue placeholder="Select a service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="onboarding">Client Onboarding</SelectItem>
-                      <SelectItem value="email">Email Management</SelectItem>
-                      <SelectItem value="scheduling">Scheduling & Coordination</SelectItem>
-                      <SelectItem value="tracking">Client Tracking Systems</SelectItem>
-                      <SelectItem value="reporting">Operational Reporting</SelectItem>
-                      <SelectItem value="community">Community Management</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="space-y-4">
+                  <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Select Services (Pick as many as you need)</label>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
+                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all duration-300 border ${
+                        theme === 'dark' 
+                          ? "bg-[#18181b] border-stone-700 text-stone-300 hover:border-stone-500" 
+                          : "bg-stone-50 border-stone-200 text-stone-600 hover:border-stone-300"
+                      }`}
+                    >
+                      <span className="truncate">
+                        {selectedServices.length === 0 
+                          ? "Select services" 
+                          : `${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} selected`}
+                      </span>
+                      <ArrowDown className={`w-4 h-4 transition-transform duration-300 ${isServiceDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isServiceDropdownOpen && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-[60]" 
+                            onClick={() => setIsServiceDropdownOpen(false)} 
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 4, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className={`absolute left-0 right-0 z-[70] mt-2 rounded-2xl border shadow-2xl overflow-hidden ${
+                              theme === 'dark' ? 'bg-[#18181b] border-white/10' : 'bg-white border-stone-200'
+                            }`}
+                          >
+                            <div className="p-2 max-h-[300px] overflow-y-auto">
+                              {[
+                                { id: "onboarding", label: "Client Onboarding" },
+                                { id: "email", label: "Email Management" },
+                                { id: "scheduling", label: "Scheduling & Coordination" },
+                                { id: "tracking", label: "Client Tracking Systems" },
+                                { id: "reporting", label: "Operational Reporting" },
+                                { id: "community", label: "Community Management" },
+                                { id: "other", label: "Other" }
+                              ].map((s) => (
+                                <button
+                                  key={s.id}
+                                  type="button"
+                                  onClick={() => toggleService(s.id)}
+                                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
+                                    selectedServices.includes(s.id)
+                                      ? theme === 'dark' ? "bg-purple-500/10 text-purple-400" : "bg-purple-50 text-purple-600"
+                                      : theme === 'dark' ? "text-stone-400 hover:bg-white/5" : "text-stone-600 hover:bg-stone-50"
+                                  }`}
+                                >
+                                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors duration-200 ${
+                                    selectedServices.includes(s.id)
+                                      ? "bg-purple-500 border-purple-500"
+                                      : theme === 'dark' ? "border-stone-700 bg-[#0f0f12]" : "border-stone-300 bg-white"
+                                  }`}>
+                                    {selectedServices.includes(s.id) && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+                                  </div>
+                                  {s.label}
+                                </button>
+                              ))}
+                            </div>
+                            <div className={`p-3 border-t text-center ${theme === 'dark' ? 'border-white/5' : 'border-stone-100'}`}>
+                              <button
+                                type="button"
+                                onClick={() => setIsServiceDropdownOpen(false)}
+                                className="text-xs font-medium text-purple-500 hover:text-purple-400 transition-colors"
+                              >
+                                Done
+                              </button>
+                            </div>
+                          </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  {selectedServices.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {selectedServices.map(id => {
+                        const label = [
+                          { id: "onboarding", label: "Client Onboarding" },
+                          { id: "email", label: "Email Management" },
+                          { id: "scheduling", label: "Scheduling & Coordination" },
+                          { id: "tracking", label: "Client Tracking Systems" },
+                          { id: "reporting", label: "Operational Reporting" },
+                          { id: "community", label: "Community Management" },
+                          { id: "other", label: "Other" }
+                        ].find(s => s.id === id)?.label;
+                        return (
+                          <Badge key={id} variant="secondary" className={`rounded-full px-3 py-1 text-[10px] ${
+                            theme === 'dark' ? 'bg-purple-900/30 text-purple-300' : 'bg-purple-50 text-purple-600'
+                          }`}>
+                            {label}
+                            <X className="w-3 h-3 ml-1.5 cursor-pointer hover:text-red-400" onClick={() => toggleService(id)} />
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className={`text-sm font-medium transition-colors duration-300 ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>Message</label>
